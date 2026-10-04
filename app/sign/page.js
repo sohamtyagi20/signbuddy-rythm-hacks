@@ -3,12 +3,16 @@
 import React, { useRef, useState, useEffect } from "react";
 import * as tf from "@tensorflow/tfjs";
 import Webcam from "react-webcam";
-import {drawRect} from "./utilities"; 
+import {drawRect, getLabel} from "./utilities";
 
 function SignLanguage() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
   const [error, setError] = useState("");
+  const [modelReady, setModelReady] = useState(false);
+  const [cameraReady, setCameraReady] = useState(false);
+  const [diagnostics, setDiagnostics] = useState({frames: 0, fps: 0, label: "None", confidence: 0});
+  const inferenceRef = useRef({frames: 0, startedAt: 0});
 
   // Main function
   const runCoco = async () => {
@@ -45,13 +49,25 @@ function SignLanguage() {
       const boxes = await obj[1].array()
       const classes = await obj[2].array()
       const scores = await obj[4].array()
+
+      const topIndex = scores[0].reduce((best, score, index, values) => score > values[best] ? index : best, 0);
+      const frames = ++inferenceRef.current.frames;
+      if (frames % 10 === 0) {
+        const elapsed = (performance.now() - inferenceRef.current.startedAt) / 1000;
+        setDiagnostics({
+          frames,
+          fps: Math.round(frames / elapsed),
+          label: getLabel(classes[0][topIndex]),
+          confidence: Math.round(scores[0][topIndex] * 100)
+        });
+      }
       
       // Draw mesh
       const ctx = canvasRef.current.getContext("2d");
 
       // 5. TODO - Update drawing utility
       // drawSomething(obj, ctx)  
-      requestAnimationFrame(()=>{drawRect(boxes[0], classes[0], scores[0], 0.8, videoWidth, videoHeight, ctx)}); 
+      requestAnimationFrame(()=>{drawRect(boxes[0], classes[0], scores[0], 0.5, videoWidth, videoHeight, ctx)});
 
       tf.dispose(img)
       tf.dispose(resized)
@@ -70,8 +86,16 @@ function SignLanguage() {
     const run = async () => {
       try {
         net = await runCoco();
+        setModelReady(true);
+        inferenceRef.current.startedAt = performance.now();
         const loop = async () => {
-          await detect(net);
+          try {
+            await detect(net);
+          } catch (e) {
+            setError(`Inference failed: ${e.message}`);
+            console.error(e);
+            return;
+          }
           if (!stopped) frame = requestAnimationFrame(loop);
         };
         loop();
@@ -90,22 +114,33 @@ function SignLanguage() {
   }, []);
 
   return (
-    <div className="h-screen">
-      {error ? <p className="p-4 text-center text-red-600">{error}</p> : null}
-      <header className="App-header">
+    <main className="mx-auto w-full max-w-5xl px-5 py-8 md:px-8">
+      <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <h2 className="text-2xl font-bold text-gray-900">Sign detector</h2>
+        <p className="mt-1 text-sm text-slate-600">Show one supported sign clearly in the camera. Boxes appear at 50% confidence or higher.</p>
+        <div className="mt-4 grid gap-3 text-sm sm:grid-cols-4">
+          <p><span className="font-semibold text-slate-700">Model:</span> {modelReady ? "Ready" : "Loading…"}</p>
+          <p><span className="font-semibold text-slate-700">Camera:</span> {cameraReady ? "Ready" : "Waiting…"}</p>
+          <p><span className="font-semibold text-slate-700">Inference:</span> {diagnostics.frames ? `${diagnostics.frames} frames (${diagnostics.fps} FPS)` : "Waiting…"}</p>
+          <p><span className="font-semibold text-slate-700">Top result:</span> {diagnostics.label} ({diagnostics.confidence}%)</p>
+        </div>
+        {error ? <p className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">{error}</p> : null}
+      </div>
+      <div className="relative mx-auto aspect-[4/3] w-full max-w-[640px] overflow-hidden rounded-2xl bg-slate-900 shadow-lg">
         <Webcam
           ref={webcamRef}
-          muted={true} 
+          muted={true}
+          audio={false}
+          onUserMedia={() => { setCameraReady(true); setError(""); }}
+          onUserMediaError={() => { setCameraReady(false); setError("Camera access failed. Allow camera access in your browser, then refresh."); }}
           style={{
             position: "absolute",
-            marginLeft: "auto",
-            marginRight: "auto",
             left: 0,
-            right: 0,
-            textAlign: "center",
+            top: 0,
             zIndex: 9,
-            width: 640,
-            height: 480,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
           }}
         />
 
@@ -113,18 +148,15 @@ function SignLanguage() {
           ref={canvasRef}
           style={{
             position: "absolute",
-            marginLeft: "auto",
-            marginRight: "auto",
             left: 0,
-            right: 0,
-            textAlign: "center",
+            top: 0,
             zIndex: 10,
-            width: 640,
-            height: 480,
+            width: "100%",
+            height: "100%",
           }}
         />
-      </header>
-    </div>
+      </div>
+    </main>
   );
 }
 

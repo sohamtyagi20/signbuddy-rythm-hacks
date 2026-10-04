@@ -7,6 +7,8 @@ const labelMap = {
     5:{name:'No', color:'purple'},
 }
 
+export const getLabel = (classId) => labelMap[Math.round(classId)]?.name || `Class ${Math.round(classId)}`;
+
 // Define a drawing function
 export const drawRect = (boxes, classes, scores, threshold, imgWidth, imgHeight, ctx)=>{
     ctx.clearRect(0, 0, imgWidth, imgHeight)
@@ -15,7 +17,7 @@ export const drawRect = (boxes, classes, scores, threshold, imgWidth, imgHeight,
             // Extract variables
             const [yMin,xMin,yMax,xMax] = boxes[i]
             const text = classes[i]
-            const label = labelMap[text]
+            const label = labelMap[Math.round(text)]
             if (!label) continue
             
             // Set styling
