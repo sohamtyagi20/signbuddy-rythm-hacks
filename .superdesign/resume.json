@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "targets": {
+    "/auth/sign-up": {
+      "targetKind": "existing-ui",
+      "projectId": "834b274d-9034-45c7-80a5-f98611efffbd",
+      "baselineDraftId": "059641e0-2920-4c1f-a4b3-5403140d3b3d",
+      "activeDraftId": "059641e0-2920-4c1f-a4b3-5403140d3b3d",
+      "designSystemPath": ".superdesign/design-system.md",
+      "referenceIds": [],
+      "contextFiles": [
+        ".superdesign/design-system.md",
+        "app/globals.css",
+        "tailwind.config.js",
+        "app/layout.js",
+        "app/components/Navbar.js",
+        "app/auth/sign-up/page.js"
+      ],
+      "fingerprints": {
+        ".superdesign/design-system.md": "6890c5d465976e2ab4382613f28f4c3b083a112a277f4c78fbc9fcc483a01883",
+        "app/globals.css": "38b68823ae2077c137b80ea2e3d92d4b86ac920a644d62f8cb392434332c44d8",
+        "tailwind.config.js": "02c2d668d4a6e07f6610bbb90bb0ff27f3adc449846f0e7c868a2db395683993",
+        "app/layout.js": "2d85020633138e03126a1ddb57333f835db199f38bc1cdba51265c407b3dadb5",
+        "app/components/Navbar.js": "3672489cf4afaf521fbf1232bb7217ff865eac98418ced1547098fb68b8eb8f3",
+        "app/auth/sign-up/page.js": "8b98f3194923e401f7ddf7086e8e2f3c7e744416d4a01bc18724e770d74aa077"
+      },
+      "components": [],
+      "drafts": {
+        "059641e0-2920-4c1f-a4b3-5403140d3b3d": {
+          "title": "SignBuddy Registration",
+          "visualDirection": "centered minimal authentication card",
+          "currentVersion": 2
+        }
+      },
+      "updatedAt": "2026-10-03T20:15:00-04:00"
+    }
+  }
+}

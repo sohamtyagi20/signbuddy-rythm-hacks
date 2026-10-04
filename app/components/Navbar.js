@@ -11,19 +11,19 @@ const Navbar = () => {
     const router = useRouter();
 
   return (
-    <nav className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-      <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-2xl font-mono font-bold cursor-pointer" onClick={() => router.replace("/profile")}>SignBuddy</h1>
+    <nav className="border-b border-slate-200 bg-white">
+      <div className="mx-auto flex h-20 w-full max-w-6xl items-center justify-between px-5 md:px-8">
+        <h1 className="cursor-pointer font-mono text-2xl font-bold tracking-tight text-gray-900" onClick={() => router.replace("/profile")}>SignBuddy</h1>
         {isAuth ? (
           <button
-            className="text-white bg-red-500 px-4 py-2 rounded hover:bg-red-600"
+            className="min-h-11 rounded-lg bg-red-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-red-200"
             onClick={() => signOut({ callbackUrl: "/" })}
           >
             Logout
           </button>
         ) : (
             <button
-                className="text-white bg-slate-500 px-4 py-2 rounded hover:bg-slate-600"
+                className="min-h-11 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-blue-200"
                 onClick={() => router.replace("/")}
             >
                 Login

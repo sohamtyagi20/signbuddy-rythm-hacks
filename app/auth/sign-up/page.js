@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 
 const SignUp = () => {
     const [busy, setBusy] = useState(false);
@@ -36,16 +37,22 @@ const SignUp = () => {
     };
 
     return (
-        <div className="flex items-center">
-            <div className="py-2 rounded w-96">
-            <h2 className="text-2xl font-semibold mb-6">Register</h2>
-            {message ? <p className="mb-4">{message}</p> : null}
-            <form>
-                <div className="mb-4">
-                <label className="block text-gray-600 font-semibold">Name</label>
+        <main className="flex min-h-[calc(100vh-5rem)] items-center justify-center px-5 py-8 md:px-8 md:py-12">
+            <section className="w-full max-w-[420px] rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+            <div className="mb-7">
+                <h2 className="text-3xl font-bold tracking-tight text-gray-900">Create your account</h2>
+                <p className="mt-2 text-base leading-6 text-slate-600">Start learning common sign-language gestures with SignBuddy.</p>
+            </div>
+            {message ? <p className="mb-5 rounded-lg bg-slate-100 px-4 py-3 text-sm text-slate-700" role="status">{message}</p> : null}
+            <form onSubmit={handleSubmit}>
+                <div className="mb-5">
+                <label htmlFor="name" className="mb-1.5 block text-sm font-semibold text-slate-700">Name</label>
                 <input
+                    id="name"
                     type="text"
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+                    required
+                    autoComplete="name"
+                    className="min-h-11 w-full rounded-[10px] border border-slate-300 bg-white px-4 py-2.5 text-gray-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-200"
                     placeholder="Your Name"
                     label="Name"
                     name="name"
@@ -53,11 +60,14 @@ const SignUp = () => {
                     onChange={handleChange}
                 />
                 </div>
-                <div className="mb-4">
-                <label className="block text-gray-600 font-semibold">Email</label>
+                <div className="mb-5">
+                <label htmlFor="email" className="mb-1.5 block text-sm font-semibold text-slate-700">Email</label>
                 <input
+                    id="email"
                     type="email"
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+                    required
+                    autoComplete="email"
+                    className="min-h-11 w-full rounded-[10px] border border-slate-300 bg-white px-4 py-2.5 text-gray-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-200"
                     placeholder="Your Email"
                     label="Email"
                     name="email"
@@ -65,12 +75,15 @@ const SignUp = () => {
                     onChange={handleChange}
                 />
                 </div>
-                <div className="mb-4">
-                <label className="block text-gray-600 font-semibold">Password</label>
+                <div className="mb-6">
+                <label htmlFor="password" className="mb-1.5 block text-sm font-semibold text-slate-700">Password</label>
                 <input
+                    id="password"
                     type="password"
                     minLength={8}
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+                    required
+                    autoComplete="new-password"
+                    className="min-h-11 w-full rounded-[10px] border border-slate-300 bg-white px-4 py-2.5 text-gray-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-200"
                     placeholder="Your Password"
                     label="Password"
                     name="password"
@@ -78,20 +91,18 @@ const SignUp = () => {
                     onChange={handleChange}
                 />
                 </div>
-                <div className="mt-6">
                 <button
                     type="submit"
-                    onClick={handleSubmit}
-                    className="w-full bg-blue-500 text-white font-semibold py-2 rounded-md hover:bg-blue-600 transition duration-300"
+                    className="min-h-11 w-full rounded-[10px] bg-blue-600 py-2.5 font-semibold text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-200"
                     disabled={busy}
                     style={{opacity: busy ? 0.5 : 1}}
                 >
-                    Register
+                    {busy ? "Creating account…" : "Register"}
                 </button>
-                </div>
             </form>
-            </div>
-        </div>
+            <p className="mt-6 text-center text-sm text-slate-600">Already have an account? <Link href="/" className="font-semibold text-blue-600 underline-offset-4 hover:underline focus:outline-none focus:ring-4 focus:ring-blue-200">Login</Link></p>
+            </section>
+        </main>
     );
 };
 
